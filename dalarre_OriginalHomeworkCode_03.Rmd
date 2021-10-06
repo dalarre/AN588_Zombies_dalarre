@@ -33,5 +33,108 @@ library(curl)
 f <- curl("https://raw.githubusercontent.com/fuzzyatelin/fuzzyatelin.github.io/master/AN588_Fall21/zombies.csv")
 d <- read.csv(f, header = TRUE, sep = ",", stringsAsFactors = FALSE)
 head(d)
+names(d)
+## This loads the data
 
 ```
+1
+```{r}
+## This returns the mean of each quantitative variable in d
+mean(d$height)
+mean(d$weight)
+mean(d$zombies_killed)
+mean(d$years_of_education)
+mean(d$age)
+
+
+## This creates a function that calculates the population standard deviation
+pop_sd <- function(x) {
+    sqrt(sum((x - mean(x))^2)/(length(x)))
+}
+## This returns the population standard deviation of each quantitative variable in d
+pop_sd(d$height)
+pop_sd(d$weight)
+pop_sd(d$zombies_killed)
+pop_sd(d$years_of_education)
+pop_sd(d$age)
+
+```
+
+2
+```{r}
+library(ggplot2)
+
+heightboxplot <- ggplot(d, aes(gender, height, color = factor(gender))) + geom_boxplot(show.legend = F) + xlab("Gender") + ylab("Height") 
+heightboxplot
+
+weightboxplot <- ggplot(d, aes(gender, weight, color = factor(gender))) + geom_boxplot(show.legend = F) + xlab("Gender") + ylab("Weight") 
+weightboxplot
+
+zombies_killedboxplot <- ggplot(d, aes(gender, zombies_killed, color = factor(gender))) + geom_boxplot(show.legend = F) + xlab("Gender") + ylab("Zombies killed") 
+zombies_killedboxplot
+
+years_of_educationboxplot <- ggplot(d, aes(gender, years_of_education, color = factor(gender))) + geom_boxplot(show.legend = F) + xlab("Gender") + ylab("Years of education") 
+years_of_educationboxplot
+
+ageboxplot <- ggplot(d, aes(gender, age, color = factor(gender))) + geom_boxplot(show.legend = F) + xlab("Gender") + ylab("Age") 
+ageboxplot
+
+## This code creates the boxplots of each quantitative variable by gender. The show.legend = F argument deletes the legend.
+```
+
+3
+```{r}
+library(ggplot2)
+
+height_age <- ggplot(d, aes(age, height)) + geom_point(color = "darkgreen") + xlab("Age") + ylab("Height") 
+height_age
+
+weight_age <- ggplot(d, aes(age, weight)) + geom_point(color = "darkblue") + xlab("Age") + ylab("Weight") 
+weight_age
+
+## This code creates scatterplots of height and weight in relation to age. 
+## Height seems to be related to age (directly proportional). Weight values are more scattered and it is difficult to assume a relation
+```
+
+4
+```{r}
+## This code creates Q-Q plots of the quantitative variables to check if they are drawn for a normal distribution
+
+qqnorm(d$height, main = "Height Q-Q plot")
+qqline(d$height, col = "blue")
+
+qqnorm(d$weight, main = "Weight Q-Q plot")
+qqline(d$weight, col = "blue")
+
+qqnorm(d$zombies_killed, main = "Zombies killed Q-Q plot")
+qqline(d$zombies_killed, col = "blue")
+
+qqnorm(d$years_of_education, main = "Years of education Q-Q plot")
+qqline(d$years_of_education, col = "blue")
+
+qqnorm(d$age, main = "Age Q-Q plot")
+qqline(d$age, col = "blue")
+
+## The resultant Q-Q plots indicate that height, weight and age are variables drawn from the normal distribution. Zombies_killed and Years_of_education are discrete variables, so they can't be normally distributed. They are probably drawn from the poisson distribution. To check this we can plot a histogram of the data and compare it to a histogram of simulated data from a poisson distribution with a mean of 3 (approximately equal to the means of zombies_killed and years_of_education) to see if the approximate shape of the distribution is the same
+
+hist(d$zombies_killed)
+
+hist(d$years_of_education)
+
+hist(rpois(100000,3))
+
+## Comparing the histograms we can see that they have really similar shapes, so it is very probable that the data follow the Poisson distribution. However, we haven`t proved it totally.
+```
+
+5
+```{r}
+
+s <- sample(d, 30, replace = F)
+mean(s$height)
+
+```
+
+
+
+
+
