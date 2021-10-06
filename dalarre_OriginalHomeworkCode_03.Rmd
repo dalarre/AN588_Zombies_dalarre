@@ -232,19 +232,26 @@ for (i in 1:99) {
 }
 
 ## This calculates the mean of the means of the 100 samples (this 99 and the previous ine from question 5)
-mean(c(mh,m_height))
-mean(c(mw,m_weight))
-mean(c(mzk,m_zk))
-mean(c(myoe,m_yoe))
-mean(c(ma,m_age))
+
+meanhsamp <- c(mh,m_height)
+meanwsamp <- c(mw,m_weight)
+meanzksamp <- c(mzk,m_zk)
+meanyoesamp <- c(myoe,m_yoe)
+meanasamp <- c(ma,m_age)
+
+mean(meanhsamp)
+mean(meanwsamp)
+mean(meanzksamp)
+mean(meanyoesamp)
+mean(meanasamp)
 
 
 ## This calculates the standard deviation of the means of the 100 samples (this 99 and the previous ine from question 5)
-sd(c(mh,m_height))
-sd(c(mw,m_weight))
-sd(c(mzk,m_zk))
-sd(c(myoe,m_yoe))
-sd(c(ma,m_age))
+sd(meanhsamp)
+sd(meanwsamp)
+sd(meanzksamp)
+sd(meanyoesamp)
+sd(meanasamp)
 
 ## When comparing with the standard errors estimated before, they are really close
 se_height
@@ -254,16 +261,30 @@ se_yoe
 se_age
 
 ## This plots the sampling distributions
-hist(c(mh,m_height))
-hist(c(mw,m_weight))
-hist(c(mzk,m_zk))
-hist(c(myoe,m_yoe))
-hist(c(ma,m_age))
+hist(meanhsamp)
+hist(meanwsamp)
+hist(meanzksamp)
+hist(meanyoesamp)
+hist(meanasamp)
 
 ## To see if they are normally distributed, I do Q-Q plots
 
-qqnorm(c(mh,m_height), main = "Height Q-Q plot")
-qqline(c(mh,m_height), col = "blue")
+qqnorm(meanhsamp, main = "Mean Height Q-Q plot")
+qqline(meanhsamp, col = "blue")
+
+qqnorm(meanwsamp, main = "Mean Weight Q-Q plot")
+qqline(meanwsamp, col = "blue")
+
+qqnorm(meanzksamp, main = "Mean Zombies killed Q-Q plot")
+qqline(meanzksamp, col = "blue")
+
+qqnorm(meanyoesamp, main = "Mean Years of education Q-Q plot")
+qqline(meanyoesamp, col = "blue")
+
+qqnorm(meanasamp, main = "Mean Age Q-Q plot")
+qqline(meanasamp, col = "blue")
+
+## Following the Central Limit Theorem, all of this sampling distributions are normally distributed, even the ones that weren't originally drawn from a normal distribution
 
 ```
 
