@@ -124,6 +124,7 @@ hist(d$years_of_education)
 hist(rpois(100000,3))
 
 ## Comparing the histograms we can see that they have really similar shapes, so it is very probable that the data follow the Poisson distribution. However, we haven`t proved it totally.
+
 ```
 
 5
