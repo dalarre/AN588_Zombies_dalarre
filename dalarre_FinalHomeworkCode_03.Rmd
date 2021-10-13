@@ -86,14 +86,15 @@ ageboxplot
 ```{r}
 library(ggplot2)
 
-height_age <- ggplot(d, aes(age, height)) + geom_point(color = "darkgreen") + xlab("Age") + ylab("Height") 
+height_age <- ggplot(d, aes(age, height)) + geom_point(color = "darkgreen") + xlab("Age") + ylab("Height") + geom_smooth(method = lm) 
 height_age
 
 weight_age <- ggplot(d, aes(age, weight)) + geom_point(color = "darkblue") + xlab("Age") + ylab("Weight") 
-weight_age
+weight_age + geom_smooth(method = lm)
 
 ## This code creates scatterplots of height and weight in relation to age. 
 ## Height seems to be related to age (directly proportional). Weight values are more scattered and it is difficult to assume a relation
+## After peer commentary I added the regression lines 
 ```
 
 4
@@ -173,25 +174,43 @@ se_age
 
 
 ##This calculates the 95% confidence intervals of the variables that are normally distributed
-lower_h <- m_height - qnorm(1 - 0.05/2) * se_height
-upper_h <- m_height + qnorm(1 - 0.05/2) * se_height
+## After peer commentary I realized that I had to use the t distribution for the CIs because the sample size is 30
+
+lower_h <- m_height - qt(1 - 0.05/2, df = 30 - 1) * se_height
+upper_h <- m_height + qt(1 - 0.05/2, df = 30 - 1) * se_height
 ci_h <- c(lower_h, upper_h)
 ci_h
 
 
-lower_w <- m_weight - qnorm(1 - 0.05/2) * se_weight
-upper_w <- m_weight + qnorm(1 - 0.05/2) * se_weight
+lower_w <- m_weight - qt(1 - 0.05/2, df = 30 - 1) * se_weight
+upper_w <- m_weight + qt(1 - 0.05/2, df = 30 - 1) * se_weight
 ci_w <- c(lower_w, upper_w)
 ci_w
 
 
-lower_age <- m_age - qnorm(1 - 0.05/2) * se_age
-upper_age <- m_age + qnorm(1 - 0.05/2) * se_age
+lower_age <- m_age - qt(1 - 0.05/2, df = 30 - 1) * se_age
+upper_age <- m_age + qt(1 - 0.05/2, df = 30 - 1) * se_age
 ci_age <- c(lower_age, upper_age)
 ci_age
 
 
-## I don't know how to calculate the confidence intervals for the non-normally distributed variables
+
+## During peer commentary we figured out this way to do the CIs for poisson. 
+## This calculates the 95% confidence interval for the variables that follow the poisson distribution
+## Using qpois(p, lambda)
+## For lambda I used the mean calculated in question 1 (the population mean)
+
+lower_zk <- m_zk - qpois(1 - 0.05/2, 2.992) * se_zk
+upper_zk <- m_zk + qpois(1 - 0.05/2, 2.992) * se_zk
+ci_zk <- c(lower_zk, upper_zk)
+ci_zk
+
+
+lower_yoe <- m_yoe - qpois(1 - 0.05/2, 2.996) * se_yoe
+upper_yoe <- m_yoe + qpois(1 - 0.05/2, 2.996) * se_yoe
+ci_yoe <- c(lower_yoe, upper_yoe)
+ci_yoe
+
 ```
 
 6
