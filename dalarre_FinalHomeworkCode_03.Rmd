@@ -89,8 +89,8 @@ library(ggplot2)
 height_age <- ggplot(d, aes(age, height)) + geom_point(color = "darkgreen") + xlab("Age") + ylab("Height") + geom_smooth(method = lm) 
 height_age
 
-weight_age <- ggplot(d, aes(age, weight)) + geom_point(color = "darkblue") + xlab("Age") + ylab("Weight") 
-weight_age + geom_smooth(method = lm)
+weight_age <- ggplot(d, aes(age, weight)) + geom_point(color = "darkblue") + xlab("Age") + ylab("Weight") + geom_smooth(method = lm)
+weight_age 
 
 ## This code creates scatterplots of height and weight in relation to age. 
 ## Height seems to be related to age (directly proportional). Weight values are more scattered and it is difficult to assume a relation
