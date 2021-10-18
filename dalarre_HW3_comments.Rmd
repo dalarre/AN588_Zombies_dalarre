@@ -310,6 +310,5 @@ qqline(meanasamp, col = "blue")
 
 ```
 
-*did you include the first 30? -mel*
 
 *Great work! maybe break up your chunks a bit for organization (and to help us run it step by step) -mel*
