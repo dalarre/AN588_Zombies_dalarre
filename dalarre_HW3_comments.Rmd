@@ -1,0 +1,314 @@
+---
+title: "dalarre_OriginalHomeworkCode_03"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+```{r}
+library(curl)
+f <- curl("https://raw.githubusercontent.com/fuzzyatelin/fuzzyatelin.github.io/master/AN588_Fall21/zombies.csv")
+d <- read.csv(f, header = TRUE, sep = ",", stringsAsFactors = FALSE)
+head(d)
+names(d)
+## This loads the data
+
+```
+1
+```{r}
+## This returns the mean of each quantitative variable in d
+mean(d$height)
+mean(d$weight)
+mean(d$zombies_killed)
+mean(d$years_of_education)
+mean(d$age)
+
+
+## This creates a function that calculates the population standard deviation
+pop_sd <- function(x) {
+    sqrt(sum((x - mean(x))^2)/(length(x)))
+}
+## This returns the population standard deviation of each quantitative variable in d
+pop_sd(d$height)
+pop_sd(d$weight)
+pop_sd(d$zombies_killed)
+pop_sd(d$years_of_education)
+pop_sd(d$age)
+
+```
+
+2
+```{r}
+library(ggplot2)
+
+heightboxplot <- ggplot(d, aes(gender, height, color = factor(gender))) + geom_boxplot(show.legend = F) + xlab("Gender") + ylab("Height") 
+heightboxplot
+
+weightboxplot <- ggplot(d, aes(gender, weight, color = factor(gender))) + geom_boxplot(show.legend = F) + xlab("Gender") + ylab("Weight") 
+weightboxplot
+
+zombies_killedboxplot <- ggplot(d, aes(gender, zombies_killed, color = factor(gender))) + geom_boxplot(show.legend = F) + xlab("Gender") + ylab("Zombies killed") 
+zombies_killedboxplot
+
+years_of_educationboxplot <- ggplot(d, aes(gender, years_of_education, color = factor(gender))) + geom_boxplot(show.legend = F) + xlab("Gender") + ylab("Years of education") 
+years_of_educationboxplot
+
+ageboxplot <- ggplot(d, aes(gender, age, color = factor(gender))) + geom_boxplot(show.legend = F) + xlab("Gender") + ylab("Age") 
+ageboxplot
+
+## This code creates the boxplots of each quantitative variable by gender. The show.legend = F argument deletes the legend.
+```
+
+3
+```{r}
+library(ggplot2)
+
+height_age <- ggplot(d, aes(age, height)) + geom_point(color = "darkgreen") + xlab("Age") + ylab("Height") + geom_smooth(method = lm) 
+height_age
+
+weight_age <- ggplot(d, aes(age, weight)) + geom_point(color = "darkblue") + xlab("Age") + ylab("Weight") + geom_smooth(method = lm)
+weight_age 
+
+## This code creates scatterplots of height and weight in relation to age. 
+## Height seems to be related to age (directly proportional). Weight values are more scattered and it is difficult to assume a relation
+## After peer commentary I added the regression lines 
+```
+
+4
+```{r}
+## This code creates Q-Q plots of the quantitative variables to check if they are drawn for a normal distribution
+
+qqnorm(d$height, main = "Height Q-Q plot")
+qqline(d$height, col = "blue")
+
+qqnorm(d$weight, main = "Weight Q-Q plot")
+qqline(d$weight, col = "blue")
+
+qqnorm(d$zombies_killed, main = "Zombies killed Q-Q plot")
+qqline(d$zombies_killed, col = "blue")
+
+qqnorm(d$years_of_education, main = "Years of education Q-Q plot")
+qqline(d$years_of_education, col = "blue")
+
+qqnorm(d$age, main = "Age Q-Q plot")
+qqline(d$age, col = "blue")
+
+## The resultant Q-Q plots indicate that height, weight and age are variables drawn from the normal distribution. Zombies_killed and Years_of_education are discrete variables, so they can't be normally distributed. They are probably drawn from the poisson distribution. To check this we can plot a histogram of the data and compare it to a histogram of simulated data from a poisson distribution with a mean of 3 (approximately equal to the means of zombies_killed and years_of_education) to see if the approximate shape of the distribution is the same
+
+hist(d$zombies_killed)
+
+hist(d$years_of_education)
+
+hist(rpois(100000,3))
+
+## Comparing the histograms we can see that they have really similar shapes, so it is very probable that the data follow the Poisson distribution. However, we haven`t proved it totally.
+
+```
+
+5
+```{r}
+## This samples a subset of 30 people
+set.seed(1)
+s <- sample(1:nrow(d), 30, replace = F)
+d[s,]
+
+## This calculates the mean of each variable in the sample
+m_height <- mean(d$height[s])
+m_height
+m_weight <- mean(d$weight[s])
+m_weight
+m_zk <- mean(d$zombies_killed[s])
+m_zk
+m_yoe <- mean(d$years_of_education[s])
+m_yoe
+m_age <- mean(d$age[s])
+m_age
+
+## This calculates the standard deviation of each variable in the sample
+sd(d$height[s])
+sd(d$weight[s])
+sd(d$zombies_killed[s])
+sd(d$years_of_education[s])
+sd(d$age[s])
+
+
+## This builds a function for calculating the standard error
+se <- function(x) {
+    sd(x)/sqrt(length(x))
+}
+
+##  This calculates the estandard error of each variable in the sample
+se_height <- se(d$height[s])
+se_height
+se_weight <- se(d$weight[s])
+se_weight
+se_zk <- se(d$zombies_killed[s])
+se_zk
+se_yoe <- se(d$years_of_education[s])
+se_yoe
+se_age <- se(d$age[s])
+se_age
+
+
+##This calculates the 95% confidence intervals of the variables that are normally distributed
+## After peer commentary I realized that I had to use the t distribution for the CIs because the sample size is 30
+
+lower_h <- m_height - qt(1 - 0.05/2, df = 30 - 1) * se_height
+upper_h <- m_height + qt(1 - 0.05/2, df = 30 - 1) * se_height
+ci_h <- c(lower_h, upper_h)
+ci_h
+
+
+lower_w <- m_weight - qt(1 - 0.05/2, df = 30 - 1) * se_weight
+upper_w <- m_weight + qt(1 - 0.05/2, df = 30 - 1) * se_weight
+ci_w <- c(lower_w, upper_w)
+ci_w
+
+
+lower_age <- m_age - qt(1 - 0.05/2, df = 30 - 1) * se_age
+upper_age <- m_age + qt(1 - 0.05/2, df = 30 - 1) * se_age
+ci_age <- c(lower_age, upper_age)
+ci_age
+
+
+
+## During peer commentary we figured out this way to do the CIs for poisson. 
+## This calculates the 95% confidence interval for the variables that follow the poisson distribution
+## Using qpois(p, lambda)
+## For lambda I used the mean calculated in question 1 (the population mean)
+
+lower_zk <- m_zk - qpois(1 - 0.05/2, 2.992) * se_zk
+upper_zk <- m_zk + qpois(1 - 0.05/2, 2.992) * se_zk
+ci_zk <- c(lower_zk, upper_zk)
+ci_zk
+
+
+lower_yoe <- m_yoe - qpois(1 - 0.05/2, 2.996) * se_yoe
+upper_yoe <- m_yoe + qpois(1 - 0.05/2, 2.996) * se_yoe
+ci_yoe <- c(lower_yoe, upper_yoe)
+ci_yoe
+
+```
+
+*can also use qnorm just like qpois for the normal distribution. -mel*
+
+6
+```{r}
+## This makes 99 more samples
+a <- NULL
+for (i in 1:99) {
+    a[[i]] <- sample(1:nrow(d), size = 30, replace = FALSE)
+}
+
+## I call this to make sure the sampling went well
+d[a[[1]],]
+
+
+## This code calculates the mean for each variable of each sample
+mh <- NULL
+for (i in 1:99) {
+    mh[i] <- mean(d$height[a[[i]]])
+}
+
+mw <- NULL
+for (i in 1:99) {
+    mw[i] <- mean(d$weight[a[[i]]])
+}
+
+mzk <- NULL
+for (i in 1:99) {
+    mzk[i] <- mean(d$zombies_killed[a[[i]]])
+}
+
+myoe <- NULL
+for (i in 1:99) {
+    myoe[i] <- mean(d$years_of_education[a[[i]]])
+}
+
+ma <- NULL
+for (i in 1:99) {
+    ma[i] <- mean(d$age[a[[i]]])
+}
+
+## This calculates the mean of the means of the 100 samples (this 99 and the previous ine from question 5)
+
+meanhsamp <- c(mh,m_height)
+meanwsamp <- c(mw,m_weight)
+meanzksamp <- c(mzk,m_zk)
+meanyoesamp <- c(myoe,m_yoe)
+meanasamp <- c(ma,m_age)
+
+mean(meanhsamp)
+mean(meanwsamp)
+mean(meanzksamp)
+mean(meanyoesamp)
+mean(meanasamp)
+
+
+## This calculates the standard deviation of the means of the 100 samples (this 99 and the previous ine from question 5)
+sd(meanhsamp)
+sd(meanwsamp)
+sd(meanzksamp)
+sd(meanyoesamp)
+sd(meanasamp)
+
+## When comparing with the standard errors estimated before, they are really close
+se_height
+se_weight
+se_zk
+se_yoe
+se_age
+
+## This plots the sampling distributions
+hist(meanhsamp)
+hist(meanwsamp)
+hist(meanzksamp)
+hist(meanyoesamp)
+hist(meanasamp)
+
+## To see if they are normally distributed, I do Q-Q plots
+
+qqnorm(meanhsamp, main = "Mean Height Q-Q plot")
+qqline(meanhsamp, col = "blue")
+
+qqnorm(meanwsamp, main = "Mean Weight Q-Q plot")
+qqline(meanwsamp, col = "blue")
+
+qqnorm(meanzksamp, main = "Mean Zombies killed Q-Q plot")
+qqline(meanzksamp, col = "blue")
+
+qqnorm(meanyoesamp, main = "Mean Years of education Q-Q plot")
+qqline(meanyoesamp, col = "blue")
+
+qqnorm(meanasamp, main = "Mean Age Q-Q plot")
+qqline(meanasamp, col = "blue")
+
+## Following the Central Limit Theorem, all of this sampling distributions are normally distributed, even the ones that weren't originally drawn from a normal distribution
+
+```
+
+
+*Great work! maybe break up your chunks a bit for organization (and to help us run it step by step) -mel*
